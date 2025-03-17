@@ -6,6 +6,7 @@ public class Controller {
     private List<Card> currentHand;
     private Player player;
     private GUI gui;
+    private List<Card> remainingDeck;
 
     public Controller() {
         runGame();
@@ -86,9 +87,10 @@ public class Controller {
         if (!containsMonster(currentHand) && deck.getCards().isEmpty()) {
             gui.gameOver("YOU WIN");
         }
+    }
 
-
-
+    public void showSortedRemainingCards() {
+          gui.showRemainingDeck(deck.sortedRemainingCards());
     }
 
     private boolean containsMonster(List<Card> list) {

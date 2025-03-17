@@ -1,5 +1,5 @@
 public class Player {
-    private int health = 20;
+    private int health = 10;
     private int weapon = 0;
     private int lastKill = 100;
     private boolean skipAvail = true;

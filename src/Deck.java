@@ -1,19 +1,23 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Deck {
-    private List<Card> cards = new ArrayList<Card>();
+    private List<Card> cards;
+    private List<String> typeOrder;
+    private List<Card> sortedCards;
 
     public Deck() {
         initialize();
     }
 
     private void initialize() {
+        cards = new ArrayList<Card>();
+        sortedCards = new ArrayList<Card>();
+        typeOrder = Arrays.asList("Potion", "Weapon", "Monster");
+
         addCards(cards, "Potion", 2, 10);
         addCards(cards, "Weapon", 2, 10);
-//        addCards(cards, "Monster", 2, 10);
-//        addCards(cards, "Monster", 2, 10);
+        addCards(cards, "Monster", 2, 10);
+        addCards(cards, "Monster", 2, 10);
         Collections.shuffle(cards);
     }
 
@@ -52,5 +56,13 @@ public class Deck {
         while (currentHand.size() < 4 && !cards.isEmpty()) {
             currentHand.add(this.drawCard());
         }
+    }
+
+    public List<Card> sortedRemainingCards() {
+        sortedCards = cards;
+        sortedCards.sort(Comparator
+                .comparing((Card card) -> typeOrder.indexOf(card.type)) // Sort by suit order
+                .thenComparing(card -> card.value));
+        return sortedCards;
     }
 }

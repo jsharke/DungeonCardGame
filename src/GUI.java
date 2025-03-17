@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class GUI {
@@ -10,6 +12,9 @@ public class GUI {
     private JLabel remainingCardsLabel;
     private JButton runButton;
     private JLabel playerLabel;
+    private JButton remainingCardsButton;
+    private JDialog remainingCardsWindow;
+    private JPanel remainingCardsPanel;;
 
     private JPanel card0Panel;
     private JPanel card1Panel;
@@ -34,13 +39,29 @@ public class GUI {
         this.controller = controller;
 
         frame = new JFrame("GAME TITLE");
-        frame.setSize(1000,400);
+        ImageIcon background = new ImageIcon("C:\\Users\\jakes\\IdeaProjects\\Java\\imgs\\cleanPaperBackgroundsmaller.png");
+
+        JLabel backgroundLabel = new JLabel(background);
+        //backgroundLabel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        //frame.setContentPane(backgroundLabel);
+
+        frame.setSize(background.getIconWidth(),background.getIconHeight());
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
+        remainingCardsPanel = new JPanel();
+        remainingCardsPanel.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
+
+        remainingCardsLabel = new JLabel();
+        remainingCardsButton = new JButton();
+        remainingCardsWindow = new JDialog();
+
+        playerLabel = new JLabel();
+        runButton = new JButton();
 
         card0Panel = new JPanel();
         card1Panel = new JPanel();
@@ -63,27 +84,26 @@ public class GUI {
         card0Panel.add(card0PrimaryButton);
         card0Panel.add(card0SecondaryButton);
 
-        remainingCardsLabel = new JLabel();
-        playerLabel = new JLabel();
-        runButton = new JButton();
+        addToUI(gamePanel, playerLabel, 0, 0);
+        addToUI(gamePanel, remainingCardsLabel, 0, 1);
+        addToUI(gamePanel, remainingCardsButton, 0, 2);
+        addToUI(gamePanel, runButton, 0, 3);
 
-        addToUI(remainingCardsLabel, 0, 1);
-        addToUI(playerLabel, 0, 0);
-        addToUI(runButton, 0, 2);
-        addToUI(card0JLabel, 1, 1);
-        addToUI(card0PrimaryButton, 1, 2);
-        addToUI(card0SecondaryButton, 1, 3);
-        addToUI(card1JLabel, 2, 1);
-        addToUI(card1PrimaryButton, 2, 2);
-        addToUI(card1SecondaryButton, 2, 3);
-        addToUI(card2JLabel, 3, 1);
-        addToUI(card2PrimaryButton, 3, 2);
-        addToUI(card2SecondaryButton, 3, 3);
-        addToUI(card3JLabel, 4, 1);
-        addToUI(card3PrimaryButton, 4, 2);
-        addToUI(card3SecondaryButton, 4, 3);
+        addToUI(gamePanel, card0JLabel, 1, 1);
+        addToUI(gamePanel, card0PrimaryButton, 1, 2);
+        addToUI(gamePanel, card0SecondaryButton, 1, 3);
+        addToUI(gamePanel, card1JLabel, 2, 1);
+        addToUI(gamePanel, card1PrimaryButton, 2, 2);
+        addToUI(gamePanel, card1SecondaryButton, 2, 3);
+        addToUI(gamePanel, card2JLabel, 3, 1);
+        addToUI(gamePanel, card2PrimaryButton, 3, 2);
+        addToUI(gamePanel, card2SecondaryButton, 3, 3);
+        addToUI(gamePanel, card3JLabel, 4, 1);
+        addToUI(gamePanel, card3PrimaryButton, 4, 2);
+        addToUI(gamePanel, card3SecondaryButton, 4, 3);
 
         setupGeneralActionListener(runButton, controller::runAway);
+        setupGeneralActionListener(remainingCardsButton, controller::showSortedRemainingCards);
         setupUseCardActionListener(card0PrimaryButton, 0, true);
         setupUseCardActionListener(card0SecondaryButton, 0, false);
         setupUseCardActionListener(card1PrimaryButton, 1, true);
@@ -93,13 +113,16 @@ public class GUI {
         setupUseCardActionListener(card3PrimaryButton, 3, true);
         setupUseCardActionListener(card3SecondaryButton, 3, false);
 
+
         frame.add(gamePanel);
         frame.setVisible(true);
+        //frame.pack();
     }
 
     public void initialize(Deck deck, List<Card> currentHand, Player player) {
         this.player = player;
         remainingCardsLabel.setText("Remaining cards: " + String.valueOf(deck.getCards().size()));
+        remainingCardsButton.setText("View deck");
         runButton.setText("Run");
         playerLabel.setText("Health: " + player.getHealth() + " | Equipped Weapon: " + player.getWeapon() + " (Last Weapon Kill: " + "None" + " )");
     }
@@ -112,23 +135,73 @@ public class GUI {
         // Use lambda expression to pass the integer to the controller method
         button.addActionListener(e -> controller.useCard(index, isPrimary));  // Passing the integer to the method
     }
-//    private void setupActionListener(JButton button, ActionListener actionListener) {
-//        button.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                method; //controller.method();
-//            }
-//        });
-//    }
 
-    private void addToUI(JComponent jcomp, int x, int y) {
+    private void addToUI(JPanel panel, JComponent jcomp, int x, int y) {
         gbc.gridx = x;
         gbc.gridy = y;
-        gamePanel.add(jcomp, gbc);
+        panel.add(jcomp, gbc);
     }
 
     public void updateRemainingDeck(int size) {
         remainingCardsLabel.setText("Remaining cards: " + String.valueOf(size));
+    }
+
+    public void showRemainingDeck(List<Card> remainingDeck) {
+        System.out.println("remaining cards menu");
+
+        remainingCardsWindow = new JDialog(frame, "Remaining Deck: " + String.valueOf(remainingDeck.size()), true);
+        //remainingCardsWindow.setSize(800,400);
+        remainingCardsWindow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        // Add some content to the dialog
+//        remainingCardsWindow.add(new JLabel("Remaining cards: " + String.valueOf(remainingDeck.size())));
+        JButton exitButton = new JButton("Back");
+        remainingCardsWindow.add(exitButton);
+
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remainingCardsWindow.dispose();
+            }
+        });
+
+        remainingCardsWindow.setLayout(new GridBagLayout());
+        addToUI(remainingCardsPanel, exitButton, 0, 0);
+
+        int pCounter = 0;
+        int wCounter = 0;
+        int mCounter = 0;
+        for (Card card : remainingDeck) {
+            if (card.type.equals("Potion")) {
+                addToUI(remainingCardsPanel, new JLabel(card.type + " " + card.value), pCounter, 1);
+                pCounter += 1;
+            }
+            if (card.type.equals("Weapon")) {
+                addToUI(remainingCardsPanel, new JLabel(card.type + " " + card.value), wCounter, 2);
+                wCounter += 1;
+            }
+            if (card.type.equals("Monster")) {
+                addToUI(remainingCardsPanel, new JLabel(card.type + " " + card.value), mCounter, 3);
+                mCounter += 1;
+            }
+        }
+//        addToUI(remainingCardsPanel, new JButton("testing"), 0, 1);
+
+
+        remainingCardsWindow.add(remainingCardsPanel);
+//        remainingCardsWindow.setLocationRelativeTo(null);
+        centreWindow(remainingCardsWindow);
+        remainingCardsWindow.pack();
+        remainingCardsPanel.setVisible(true);
+        remainingCardsWindow.setVisible(true);
+
+    }
+
+    private void centreWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
 
     public void updateRun(String str) {
@@ -195,6 +268,7 @@ public class GUI {
             playerLabel.setText("Health: " + player.getHealth() + " | Equipped Weapon: " + player.getWeapon() + " (Last Weapon Kill: " + player.getLastKill() + " )");
         }
     }
+
     public void gameOver(String text){
 //        JOptionPane gameOver = new JOptionPane();
 //        gameOver.showMessageDialog(frame, text);
