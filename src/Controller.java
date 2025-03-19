@@ -7,79 +7,90 @@ public class Controller {
     private Player player;
     private GUI gui;
     private List<Card> remainingDeck;
+    private Boolean isAttacking = false;
 
     public Controller() {
         runGame();
     }
 
-    public void setupGame() {
-        System.out.println("Setting up game");
-        this.player = new Player();
-        this.deck = new Deck();
-        this.currentHand = new ArrayList<Card>();
-        deck.fillHand(currentHand);
-        System.out.println("Game setup");
-    }
-
     public void runGame() {
         // could add main menu, instructions, settings and then call a runGame method afterwards
-        //SimpleGUI simpleGUI = new SimpleGUI();
         System.out.println("Game running");
-        setupGame();
         if (gui == null) {
             gui = new GUI(this);
         }
-        gui.initialize(deck, currentHand, player);
-        gui.refreshHand();
+    }
 
+    public void newGame() {
+        System.out.println("New Game");
+        setupGame();
+        gui.newGame(deck, currentHand, player);
+    }
+
+    public void setupGame() {
+        this.player = new Player();
+        this.deck = new Deck(this);
+        this.currentHand = new ArrayList<Card>();
+        deck.fillHand(currentHand);
+        System.out.println("Game set up");
     }
 
     public void runAway() {
         if (player.isSkipAvail() && currentHand.size() == 4) {
             deck.newHand(currentHand);
             System.out.println("New hand is dealt");
-            player.skippedHand();
+            player.runUnavavailable();
+            gui.refreshRun();
             gui.updateRemainingDeck(deck.getCards().size());
-            gui.updateRun("Running not possible");
-            gui.refreshHand();
+            gui.refreshCurrentHand(currentHand, false);
         }
     }
 
-    public void useCard(int index, boolean isPrimary) {
-        if (isPrimary) {
-            if (currentHand.get(index).type .equals("Potion")) {
-                player.heal(currentHand.get(index).value);
-                currentHand.remove(currentHand.get(index));
-            } else if (currentHand.get(index).type .equals("Weapon")) {
-                player.equip(currentHand.get(index).value);
-                player.setLastKill(100);
-                currentHand.remove(currentHand.get(index));
-            } else if (currentHand.get(index).type .equals("Monster")) {
-//                if (player.getLastKill() > currentHand.get(index).value) { //&& player.getWeapon() != 0) {
-                player.fight(currentHand.get(index).value);
-//                    if (player.getWeapon() != 0) {
-                player.setLastKill(currentHand.get(index).value);
-//                    }
-                currentHand.remove(currentHand.get(index));
-//                }
-            }
-        } else {
-            if (currentHand.get(index).type .equals("Monster")) {
-                player.takeDamage(currentHand.get(index).value);
-                currentHand.remove(currentHand.get(index));
-            }
+    public void equipWeapon() {
+        isAttacking = true;
+        gui.useWeapon();
+        gui.refreshCurrentHand(currentHand, isAttacking);
 
+    } //different from using weapon, see useCard for that implementation
+
+    public void sheatheWeapon(){
+        isAttacking = false;
+        gui.sheatheWeapon();
+        gui.refreshCurrentHand(currentHand, isAttacking);
+    }
+
+    public void useCard(Card card) {
+        if (card.type.equals("Potion")) {
+            player.heal(card.value);
         }
+        if (card.type.equals("Weapon")) {
+            player.equip(card.value);
+            player.setLastKill(101);
+            gui.updateWeapon();
+        }
+        if (card.type.equals("Monster")) {
+            if (isAttacking) {
+                System.out.println("HERE");
+                player.fight(card.value);
+                player.setLastKill(card.value);
+                System.out.println("just killed " + player.getLastKill());
+                gui.updateWeapon();
+
+            } else {
+                player.takeDamage(card.value);
+            }
+        }
+
+        player.runUnavavailable();
+        currentHand.remove(card);
+        //gui.currentHandRemove(card);
 
         if (currentHand.size() == 1){
             deck.fillHand(currentHand);
             player.skipReset();
             gui.updateRemainingDeck(deck.getCards().size());
         }
-        System.out.println(currentHand.size());
-
-        gui.refreshHand();
-        gui.refreshPlayer();
+//        System.out.println(currentHand.size());
 
         if (player.isDead()) {
             gui.gameOver("YOU DIED");
@@ -87,6 +98,10 @@ public class Controller {
         if (!containsMonster(currentHand) && deck.getCards().isEmpty()) {
             gui.gameOver("YOU WIN");
         }
+
+        gui.refreshRun();
+        gui.refreshCurrentHand(currentHand, false);
+        gui.refreshPlayer();
     }
 
     public void showSortedRemainingCards() {
@@ -104,5 +119,9 @@ public class Controller {
 
     public List<Card> getCurrentHand() {
         return currentHand;
+    }
+
+    private void gameOver() {
+
     }
 }

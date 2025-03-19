@@ -4,8 +4,10 @@ public class Deck {
     private List<Card> cards;
     private List<String> typeOrder;
     private List<Card> sortedCards;
+    private Controller controller;
 
-    public Deck() {
+    public Deck(Controller controller) {
+        this.controller = controller;
         initialize();
     }
 
@@ -30,7 +32,7 @@ public class Deck {
             int newSize = cards.size() + (maxVal - minVal + 1);
             int val = minVal;
             for (int i = cards.size(); i < newSize ; i++) {
-                cards.add(new Card(type, val));
+                cards.add(new Card(type, val, controller));
                 //System.out.println("Added " + cards.get(i).type);
                 val ++;
             }

@@ -5,135 +5,221 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class GUI {
-    private JFrame frame;
+    //CONSTRUCTOR
     private Controller controller;
-    private JPanel gamePanel;
-    private GridBagConstraints gbc;
-    private JLabel remainingCardsLabel;
-    private JButton runButton;
-    private JLabel playerLabel;
-    private JButton remainingCardsButton;
-    private JDialog remainingCardsWindow;
-    private JPanel remainingCardsPanel;;
+    private JFrame gameWindow;
+    private Container con;
+    private JPanel titleNamePanel;
+    private JLabel titleNameLabel;
+    private Font titleFont = new Font("Times New Roman", Font.PLAIN, 56);
+    private JPanel startButtonPanel;
+    private JButton startButton;
+    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 20);
 
-    private JPanel card0Panel;
-    private JPanel card1Panel;
-    private JPanel card2Panel;
-    private JPanel card3Panel;
-    private JLabel card0JLabel;
-    private JLabel card1JLabel;
-    private JLabel card2JLabel;
-    private JLabel card3JLabel;
-    private JButton card0PrimaryButton;
-    private JButton card1PrimaryButton;
-    private JButton card2PrimaryButton;
-    private JButton card3PrimaryButton;
-    private JButton card0SecondaryButton;
-    private JButton card1SecondaryButton;
-    private JButton card2SecondaryButton;
-    private JButton card3SecondaryButton;
-
+    //NEW GAME
+    private Deck deck;
     private Player player;
+    private List<Card> currentHand;
+
+    private JPanel remainingCardsPanel;
+    private JLabel remainingCardsLabel;
+    private JButton remainingCardsButton;
+    private JPanel currentHandPanel;
+    private JPanel runPanel;
+    private JButton runButton;
+    private JPanel fightPanel;
+    private JButton fightButton;
+    private JButton sheatheButton;
+    private JPanel playerPanel;
+    private JLabel playerLabel;
+    private ActionListener equipListener;
+
+    //REMAINING CARDS
+    private JDialog remainingCardsWindow;
+    private GridBagConstraints gbc;
 
     public GUI(Controller controller) {
         this.controller = controller;
+        mainMenu();
+    }
+    public void mainMenu(){
+        gameWindow = new JFrame("GAME TITLE");
+        gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameWindow.setSize(800, 600);
+        //gameWindow.getContentPane().setBackground(Color.black);
+        gameWindow.setResizable(false);
+        gameWindow.setLocationRelativeTo(null);
+        gameWindow.setVisible(true);
+        gameWindow.setLayout(null);
 
-        frame = new JFrame("GAME TITLE");
-        ImageIcon background = new ImageIcon("C:\\Users\\jakes\\IdeaProjects\\Java\\imgs\\cleanPaperBackgroundsmaller.png");
+        titleNamePanel = new JPanel();
+        titleNamePanel.setBounds(100, 100, 600, 150);
+        titleNamePanel.setOpaque(true);
 
-        JLabel backgroundLabel = new JLabel(background);
-        //backgroundLabel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        //frame.setContentPane(backgroundLabel);
+        titleNameLabel = new JLabel("Dungeon Card Game");
+        //titleNameLabel.setForeground(Color.white);
+        titleNameLabel.setFont(titleFont);
 
-        frame.setSize(background.getIconWidth(),background.getIconHeight());
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        titleNamePanel.add(titleNameLabel);
+        //con.add(titleNamePanel);
+        gameWindow.add(titleNamePanel);
 
-        gamePanel = new JPanel();
-        gamePanel.setLayout(new GridBagLayout());
+        startButtonPanel = new JPanel();
+        startButtonPanel.setBounds(300, 400, 200, 100);
+        //startButtonPanel.setBackground(Color.black);
+
+        JButton startButton = new JButton("NEW GAME");
+        //startButton.setBackground(Color.black);
+        //startButton.setForeground(Color.white);
+        startButton.setFont(normalFont);
+        startButton.setFocusPainted(false);
+        startButton.setBorderPainted(true);
+        startButton.addActionListener(e -> controller.newGame());
+
+        startButtonPanel.add(startButton);
+
+//        con.add(startButtonPanel);
+        gameWindow.add(startButtonPanel);
+    }
+
+    public void newGame(Deck deck, List<Card> currentHand, Player player) {
+        this.deck = deck;
+        this.player = player;
+        this.currentHand = currentHand;
+
+        titleNamePanel.setVisible(false);
+        startButtonPanel.setVisible(false);
+
+        //Remaining cards
         remainingCardsPanel = new JPanel();
-        remainingCardsPanel.setLayout(new GridBagLayout());
-        gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        remainingCardsPanel.setBounds(25, 25, 300, 50);
+        remainingCardsPanel.setBackground(Color.blue);
 
         remainingCardsLabel = new JLabel();
-        remainingCardsButton = new JButton();
-        remainingCardsWindow = new JDialog();
-
-        playerLabel = new JLabel();
-        runButton = new JButton();
-
-        card0Panel = new JPanel();
-        card1Panel = new JPanel();
-        card2Panel = new JPanel();
-        card3Panel = new JPanel();
-        card0JLabel = new JLabel();
-        card1JLabel = new JLabel();
-        card2JLabel = new JLabel();
-        card3JLabel = new JLabel();
-        card0PrimaryButton = new JButton();
-        card1PrimaryButton = new JButton();
-        card2PrimaryButton = new JButton();
-        card3PrimaryButton = new JButton();
-        card0SecondaryButton = new JButton();
-        card1SecondaryButton = new JButton();
-        card2SecondaryButton = new JButton();
-        card3SecondaryButton = new JButton();
-
-        card0Panel.add(card0JLabel);
-        card0Panel.add(card0PrimaryButton);
-        card0Panel.add(card0SecondaryButton);
-
-        addToUI(gamePanel, playerLabel, 0, 0);
-        addToUI(gamePanel, remainingCardsLabel, 0, 1);
-        addToUI(gamePanel, remainingCardsButton, 0, 2);
-        addToUI(gamePanel, runButton, 0, 3);
-
-        addToUI(gamePanel, card0JLabel, 1, 1);
-        addToUI(gamePanel, card0PrimaryButton, 1, 2);
-        addToUI(gamePanel, card0SecondaryButton, 1, 3);
-        addToUI(gamePanel, card1JLabel, 2, 1);
-        addToUI(gamePanel, card1PrimaryButton, 2, 2);
-        addToUI(gamePanel, card1SecondaryButton, 2, 3);
-        addToUI(gamePanel, card2JLabel, 3, 1);
-        addToUI(gamePanel, card2PrimaryButton, 3, 2);
-        addToUI(gamePanel, card2SecondaryButton, 3, 3);
-        addToUI(gamePanel, card3JLabel, 4, 1);
-        addToUI(gamePanel, card3PrimaryButton, 4, 2);
-        addToUI(gamePanel, card3SecondaryButton, 4, 3);
-
-        setupGeneralActionListener(runButton, controller::runAway);
-        setupGeneralActionListener(remainingCardsButton, controller::showSortedRemainingCards);
-        setupUseCardActionListener(card0PrimaryButton, 0, true);
-        setupUseCardActionListener(card0SecondaryButton, 0, false);
-        setupUseCardActionListener(card1PrimaryButton, 1, true);
-        setupUseCardActionListener(card1SecondaryButton, 1, false);
-        setupUseCardActionListener(card2PrimaryButton, 2, true);
-        setupUseCardActionListener(card2SecondaryButton, 2, false);
-        setupUseCardActionListener(card3PrimaryButton, 3, true);
-        setupUseCardActionListener(card3SecondaryButton, 3, false);
-
-
-        frame.add(gamePanel);
-        frame.setVisible(true);
-        //frame.pack();
-    }
-
-    public void initialize(Deck deck, List<Card> currentHand, Player player) {
-        this.player = player;
+        remainingCardsLabel.setForeground(Color.white);
         remainingCardsLabel.setText("Remaining cards: " + String.valueOf(deck.getCards().size()));
+        remainingCardsLabel.setFont(normalFont);
+        remainingCardsButton = new JButton();
         remainingCardsButton.setText("View deck");
-        runButton.setText("Run");
-        playerLabel.setText("Health: " + player.getHealth() + " | Equipped Weapon: " + player.getWeapon() + " (Last Weapon Kill: " + "None" + " )");
+        remainingCardsButton.setFont(normalFont);
+        //remainingCardsButton.addActionListener(e -> controller.showSortedRemainingCards());
+
+        remainingCardsPanel.add(remainingCardsLabel);
+        remainingCardsPanel.add(remainingCardsButton);
+        remainingCardsPanel.setVisible(true);
+        gameWindow.add(remainingCardsPanel);
+        //con.add(mainTextPanel);
+
+        //Run
+        runPanel = new JPanel();
+        runPanel.setBackground(Color.blue);
+        runPanel.setBounds(575, 25, 100, 50);
+        runButton = new JButton("RUN");
+        runButton.setFont(normalFont);
+        runButton.addActionListener(e -> controller.runAway());
+
+        runPanel.add(runButton);
+        runPanel.setVisible(true);
+        gameWindow.add(runPanel);
+
+        //Current hand
+        currentHandPanel = new JPanel();
+        currentHandPanel.setLayout(new BoxLayout(currentHandPanel, BoxLayout.X_AXIS));
+        currentHandPanel.setBackground(Color.blue);
+        currentHandPanel.setBounds(25, 100, 700, 200);
+        refreshCurrentHand(currentHand, false);
+
+        //Actions
+        fightPanel = new JPanel();
+        fightPanel.setBackground(Color.blue);
+        fightPanel.setBounds(25, 325, 650, 50);
+        fightButton = new JButton("No weapon equipped");
+        fightButton.setEnabled(false);
+        fightButton.setFont(normalFont);
+        fightButton.addActionListener(e -> controller.equipWeapon());
+        sheatheButton = new JButton();
+        sheatheButton.setFont(normalFont);
+        sheatheButton.addActionListener(e -> controller.sheatheWeapon());
+
+        fightPanel.add(fightButton);
+        fightPanel.setVisible(true);
+        gameWindow.add(fightPanel);
+
+        //Player
+        playerPanel = new JPanel();
+        playerPanel.setBackground(Color.blue);
+        playerPanel.setBounds(25, 400, 500, 50);
+        playerLabel = new JLabel("Health: " + player.getHealth());
+        playerLabel.setForeground(Color.white);
+        playerLabel.setFont(normalFont);
+
+        playerPanel.add(playerLabel);
+        playerPanel.setVisible(true);
+        gameWindow.add(playerPanel);
+
+        gameWindow.revalidate();
+        gameWindow.repaint();
+
     }
 
-    private void setupGeneralActionListener(JButton button, Runnable action) {
-        button.addActionListener(e -> action.run());
+    public void refreshCurrentHand(List<Card> newCurrentHand, boolean isAttacking) {
+        currentHandPanel.removeAll();
+        for (Card card : newCurrentHand) {
+            if (isAttacking) {
+                if (card.type.equals("Potion") || card.type.equals("Weapon")) {
+                    card.cardButton.setEnabled(false);
+                }
+            } else {
+                if (card.value > player.getLastKill()) {
+                    card.cardButton.setEnabled(false);
+                }
+                card.cardButton.setEnabled(true);
+            }
+            currentHandPanel.add(card.cardButton);
+            currentHandPanel.add(Box.createHorizontalGlue());
+        }
+        currentHandPanel.setVisible(true);
+        currentHandPanel.revalidate();
+        currentHandPanel.repaint();
+        gameWindow.add(currentHandPanel);
     }
 
-    public void setupUseCardActionListener(JButton button, int index, boolean isPrimary) {
-        // Use lambda expression to pass the integer to the controller method
-        button.addActionListener(e -> controller.useCard(index, isPrimary));  // Passing the integer to the method
+    public void updateWeapon() {
+//        System.out.println("gui sees lastkill as " + player.getLastKill());
+        fightButton.setEnabled(true);
+
+        if (player.getLastKill() == 101) {
+            fightButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: None)");
+            sheatheButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: None)");
+        } else {
+            fightButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
+            sheatheButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
+        }
+
+        fightPanel.revalidate();
+        fightPanel.repaint();
+    }
+
+    public void useWeapon(){
+        fightPanel.remove(fightButton);
+        fightButton.setVisible(false);
+        fightPanel.add(sheatheButton);
+        sheatheButton.setVisible(true);
+
+        fightPanel.revalidate();
+        fightPanel.repaint();
+        //updateWeapon();
+    }
+
+    public void sheatheWeapon() {
+        fightPanel.remove(sheatheButton);
+        sheatheButton.setVisible(false);
+        fightPanel.add(fightButton);
+        fightButton.setVisible(true);
+
+        fightPanel.revalidate();
+        fightPanel.repaint();
+        //updateWeapon();
     }
 
     private void addToUI(JPanel panel, JComponent jcomp, int x, int y) {
@@ -149,7 +235,7 @@ public class GUI {
     public void showRemainingDeck(List<Card> remainingDeck) {
         System.out.println("remaining cards menu");
 
-        remainingCardsWindow = new JDialog(frame, "Remaining Deck: " + String.valueOf(remainingDeck.size()), true);
+        remainingCardsWindow = new JDialog(gameWindow, "Remaining Deck: " + String.valueOf(remainingDeck.size()), true);
         //remainingCardsWindow.setSize(800,400);
         remainingCardsWindow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -185,88 +271,32 @@ public class GUI {
                 mCounter += 1;
             }
         }
-//        addToUI(remainingCardsPanel, new JButton("testing"), 0, 1);
-
 
         remainingCardsWindow.add(remainingCardsPanel);
-//        remainingCardsWindow.setLocationRelativeTo(null);
-        centreWindow(remainingCardsWindow);
+
         remainingCardsWindow.pack();
+        remainingCardsWindow.setLocationRelativeTo(null);
         remainingCardsPanel.setVisible(true);
         remainingCardsWindow.setVisible(true);
 
     }
 
-    private void centreWindow(Window frame) {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-        frame.setLocation(x, y);
+    public void resetRun() {
+        runButton.setEnabled(true);
+//        runButton.setText(str);
     }
 
-    public void updateRun(String str) {
-        runButton.setText(str);
-    }
-
-    public void refreshHand() {
-        setupCard(0, card0JLabel, card0PrimaryButton, card0SecondaryButton, card0Panel);
-        setupCard(1, card1JLabel, card1PrimaryButton, card1SecondaryButton, card1Panel);
-        setupCard(2, card2JLabel, card2PrimaryButton, card2SecondaryButton, card2Panel);
-        setupCard(3, card3JLabel, card3PrimaryButton, card3SecondaryButton, card3Panel);
-    }
-
-    private void setupCard(int index, JLabel jlabel, JButton jPrimaryButton, JButton jSecondaryButton, JPanel jpanel) {
-        List<Card> currentHand = controller.getCurrentHand();
-        int size = currentHand.size();
-        if (size > index) {
-
-            jlabel.setText(currentHand.get(index).type + ": " + currentHand.get(index).value);
-//            jpanel.add(jlabel);
-//            jpanel.add(jPrimaryButton);
-//            jpanel.add(jSecondaryButton);
-//            jpanel.setVisible(true);
-            jlabel.setVisible(true);
-            jPrimaryButton.setVisible(true);
-            jSecondaryButton.setVisible(false);
-
-
-            jPrimaryButton.setEnabled(true);
-            jSecondaryButton.setEnabled(true);
-
-            switch (currentHand.get(index).type) {
-                case "Potion" -> {
-                    jPrimaryButton.setText("Heal");
-                }
-                case "Weapon" -> {
-                    jPrimaryButton.setText("Equip");
-                }
-                case "Monster" -> {
-                    if (player.getWeapon() == 0) {
-                        jPrimaryButton.setText("No equipped weapon!");
-                        jPrimaryButton.setEnabled(false);
-                    } else if (player.getLastKill() > currentHand.get(index).value) {
-                        jPrimaryButton.setText("Fight");
-                    } else {
-                        jPrimaryButton.setText("Stronger than last kill!");
-                        jPrimaryButton.setEnabled(false);
-                    }
-                    jSecondaryButton.setText("Take damage");
-                    jSecondaryButton.setVisible(true);
-                }
-            }
+    public void refreshRun() {
+        if (player.isSkipAvail()) {
+            runButton.setEnabled(true);
         } else {
-            jlabel.setVisible(false);
-            jPrimaryButton.setVisible(false);
-            jSecondaryButton.setVisible(false);
+            runButton.setEnabled(false);
         }
+
     }
 
     public void refreshPlayer() {
-        if (player.getLastKill() == 100) {
-            playerLabel.setText("Health: " + player.getHealth() + " | Equipped Weapon: " + player.getWeapon() + " (Last Weapon Kill: " + "None" + " )");
-        } else {
-            playerLabel.setText("Health: " + player.getHealth() + " | Equipped Weapon: " + player.getWeapon() + " (Last Weapon Kill: " + player.getLastKill() + " )");
-        }
+       playerLabel.setText("Health: " + player.getHealth());
     }
 
     public void gameOver(String text){
@@ -275,13 +305,13 @@ public class GUI {
 
         int option = JOptionPane.showOptionDialog(null, text, "Game Options",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                null, new Object[]{"Restart", "Quit"}, "Restart");
+                null, new Object[]{"Back to Menu", "Quit"}, "Back to Menu");
 
         // Handle the user's choice
         if (option == 0) {
-            // Option 0 is "Restart", call startGame() again
-
+            System.out.println("back to main menu");
             controller.runGame();
+            // Option 0 is "Restart", call startGame() again
         } else if (option == 1) {
             // Option 1 is "Quit", exit the program
             System.exit(0);
