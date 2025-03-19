@@ -48,7 +48,7 @@ public class Controller {
 
     public void equipWeapon() {
         isAttacking = true;
-        gui.useWeapon();
+        gui.usingWeapon();
         gui.refreshCurrentHand(currentHand, isAttacking);
 
     } //different from using weapon, see useCard for that implementation
@@ -67,15 +67,15 @@ public class Controller {
             player.equip(card.value);
             player.setLastKill(101);
             gui.updateWeapon();
+            gui.enableFight();
         }
         if (card.type.equals("Monster")) {
             if (isAttacking) {
-                System.out.println("HERE");
                 player.fight(card.value);
                 player.setLastKill(card.value);
                 System.out.println("just killed " + player.getLastKill());
                 gui.updateWeapon();
-
+                sheatheWeapon();
             } else {
                 player.takeDamage(card.value);
             }

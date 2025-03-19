@@ -169,10 +169,10 @@ public class GUI {
                 if (card.type.equals("Potion") || card.type.equals("Weapon")) {
                     card.cardButton.setEnabled(false);
                 }
-            } else {
                 if (card.value > player.getLastKill()) {
                     card.cardButton.setEnabled(false);
                 }
+            } else {
                 card.cardButton.setEnabled(true);
             }
             currentHandPanel.add(card.cardButton);
@@ -186,21 +186,25 @@ public class GUI {
 
     public void updateWeapon() {
 //        System.out.println("gui sees lastkill as " + player.getLastKill());
-        fightButton.setEnabled(true);
+        //fightButton.setEnabled(true);
 
         if (player.getLastKill() == 101) {
-            fightButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: None)");
-            sheatheButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: None)");
+            fightButton.setText("Click to EQUIP weapon " + player.getWeapon() + " (Last kill: None)");
+            sheatheButton.setText("Click to SHEATHE weapon " + player.getWeapon() + " (Last kill: None)");
         } else {
-            fightButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
-            sheatheButton.setText("Click to equip weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
+            fightButton.setText("Click to EQUIP weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
+            sheatheButton.setText("Click to SHEATHE weapon " + player.getWeapon() + " (Last kill: " + player.getLastKill() + ")");
         }
 
         fightPanel.revalidate();
         fightPanel.repaint();
     }
 
-    public void useWeapon(){
+    public void enableFight(){
+        fightButton.setEnabled(true);
+    }
+
+    public void usingWeapon(){
         fightPanel.remove(fightButton);
         fightButton.setVisible(false);
         fightPanel.add(sheatheButton);
@@ -208,7 +212,7 @@ public class GUI {
 
         fightPanel.revalidate();
         fightPanel.repaint();
-        //updateWeapon();
+        updateWeapon();
     }
 
     public void sheatheWeapon() {
@@ -219,7 +223,7 @@ public class GUI {
 
         fightPanel.revalidate();
         fightPanel.repaint();
-        //updateWeapon();
+        updateWeapon();
     }
 
     private void addToUI(JPanel panel, JComponent jcomp, int x, int y) {
