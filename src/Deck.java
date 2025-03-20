@@ -5,9 +5,11 @@ public class Deck {
     private List<String> typeOrder;
     private List<Card> sortedCards;
     private Controller controller;
+    private int difficulty;
 
-    public Deck(Controller controller) {
+    public Deck(Controller controller, int difficulty) {
         this.controller = controller;
+        this.difficulty = difficulty;
         initialize();
     }
 
@@ -16,10 +18,20 @@ public class Deck {
         sortedCards = new ArrayList<Card>();
         typeOrder = Arrays.asList("Potion", "Weapon", "Monster");
 
-        addCards(cards, "Potion", 2, 10);
-        addCards(cards, "Weapon", 2, 10);
-        addCards(cards, "Monster", 2, 14);
-        addCards(cards, "Monster", 2, 14);
+        if (difficulty == 0) {
+            addCards(cards, "Potion", 2, 5);
+            addCards(cards, "Weapon", 2, 5);
+            addCards(cards, "Monster", 2, 5);
+        } else if (difficulty == 1) {
+            addCards(cards, "Potion", 2, 10);
+            addCards(cards, "Weapon", 2, 10);
+            addCards(cards, "Monster", 2, 14);
+        } else if (difficulty == 2) {
+            addCards(cards, "Potion", 2, 10);
+            addCards(cards, "Weapon", 2, 10);
+            addCards(cards, "Monster", 2, 14);
+            addCards(cards, "Monster", 2, 14);
+        }
         Collections.shuffle(cards);
     }
 

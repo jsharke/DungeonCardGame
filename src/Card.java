@@ -36,7 +36,7 @@ public class Card {
         cardButton = new JButton(String.valueOf(value), resizedIcon);
         cardButton.setFont(valueFont);
         cardButton.setPreferredSize(new Dimension(100, 140));
-
+        cardButton.setFocusPainted(false);
         cardButton.setHorizontalTextPosition(SwingConstants.CENTER);
         cardButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         cardButton.setIconTextGap(30);

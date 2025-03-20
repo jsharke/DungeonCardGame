@@ -10,26 +10,27 @@ public class Controller {
     private Boolean isAttacking = false;
 
     public Controller() {
-        runGame();
+        mainMenu();
     }
 
-    public void runGame() {
+    public void mainMenu() {
         // could add main menu, instructions, settings and then call a runGame method afterwards
         System.out.println("Game running");
         if (gui == null) {
             gui = new GUI(this);
         }
+        gui.mainMenu();
     }
 
-    public void newGame() {
+    public void newGame(int difficulty) {
         System.out.println("New Game");
-        setupGame();
+        setupGame(difficulty);
         gui.newGame(deck, currentHand, player);
     }
 
-    public void setupGame() {
+    public void setupGame(int difficulty) {
         this.player = new Player();
-        this.deck = new Deck(this);
+        this.deck = new Deck(this, difficulty);
         this.currentHand = new ArrayList<Card>();
         deck.fillHand(currentHand);
         System.out.println("Game set up");

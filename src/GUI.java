@@ -8,7 +8,9 @@ public class GUI {
     //CONSTRUCTOR
     private Controller controller;
     private JFrame gameWindow;
-    private Container con;
+
+    //Main Menu
+    private JPanel mainMenuPanel;
     private JPanel titleNamePanel;
     private JLabel titleNameLabel;
     private Font titleFont = new Font("Times New Roman", Font.PLAIN, 56);
@@ -41,47 +43,74 @@ public class GUI {
 
     public GUI(Controller controller) {
         this.controller = controller;
-        mainMenu();
-    }
-
-    public void mainMenu(){
         gameWindow = new JFrame("GAME TITLE");
+        gameWindow.setLayout(new BorderLayout());
+
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setSize(800, 600);
-        //gameWindow.getContentPane().setBackground(Color.black);
+        gameWindow.getContentPane().setBackground(Color.black);
         gameWindow.setResizable(false);
         gameWindow.setLocationRelativeTo(null);
         gameWindow.setVisible(true);
         gameWindow.setLayout(null);
+    }
+
+    public void mainMenu(){
+        mainMenuPanel = new JPanel();
+        mainMenuPanel.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        //gbc.weighty = 1;
+
+        mainMenuPanel.setSize(new Dimension(800, 600));
+        mainMenuPanel.setVisible(true);
+        mainMenuPanel.setBackground(Color.black);
 
         titleNamePanel = new JPanel();
-        titleNamePanel.setBounds(100, 100, 600, 150);
+        //titleNamePanel.setBounds(100, 100, 600, 150);
         titleNamePanel.setOpaque(true);
+        titleNamePanel.setBackground(Color.black);
 
         titleNameLabel = new JLabel("Dungeon Card Game");
-        //titleNameLabel.setForeground(Color.white);
+        titleNameLabel.setBackground(Color.black);
+        titleNameLabel.setForeground(Color.white);
         titleNameLabel.setFont(titleFont);
 
         titleNamePanel.add(titleNameLabel);
-        //con.add(titleNamePanel);
-        gameWindow.add(titleNamePanel);
+        //mainMenuPanel.add(titleNamePanel);
 
         startButtonPanel = new JPanel();
+        startButtonPanel.setLayout(new GridBagLayout());
         startButtonPanel.setBounds(300, 400, 200, 100);
-        //startButtonPanel.setBackground(Color.black);
+        startButtonPanel.setBackground(Color.black);
 
-        JButton startButton = new JButton("NEW GAME");
-        //startButton.setBackground(Color.black);
-        //startButton.setForeground(Color.white);
-        startButton.setFont(normalFont);
-        startButton.setFocusPainted(false);
-        startButton.setBorderPainted(true);
-        startButton.addActionListener(e -> controller.newGame());
+        JButton easyButton = new JButton("Easy");
+        easyButton.setFont(normalFont);
+        easyButton.setFocusPainted(false);
+        easyButton.setBorderPainted(true);
+        easyButton.addActionListener(e -> controller.newGame(0));
 
-        startButtonPanel.add(startButton);
+        JButton mediumButton = new JButton("Medium");
+        mediumButton.setFont(normalFont);
+        mediumButton.setFocusPainted(false);
+        mediumButton.setBorderPainted(true);
+        mediumButton.addActionListener(e -> controller.newGame(1));
 
-//        con.add(startButtonPanel);
-        gameWindow.add(startButtonPanel);
+        JButton hardButton = new JButton("Difficult");
+        hardButton.setFont(normalFont);
+        hardButton.setFocusPainted(false);
+        hardButton.setBorderPainted(true);
+        hardButton.addActionListener(e -> controller.newGame(2));
+
+        addToParentPanel(startButtonPanel, gbc, 0, 0, easyButton, 1, 1);
+        addToParentPanel(startButtonPanel, gbc, 0, 1, mediumButton, 1, 1);
+        addToParentPanel(startButtonPanel, gbc, 0, 2, hardButton, 1, 1);
+
+        addToParentPanel(mainMenuPanel, gbc, 0, 0, titleNamePanel, 3, 1);
+        addToParentPanel(mainMenuPanel, gbc, 1, 1, startButtonPanel, 3, 1);
+
+        gameWindow.add(mainMenuPanel);
+
     }
 
     public void newGame(Deck deck, List<Card> currentHand, Player player) {
@@ -89,19 +118,18 @@ public class GUI {
         this.player = player;
         this.currentHand = currentHand;
 
-        titleNamePanel.setVisible(false);
-        startButtonPanel.setVisible(false);
+        mainMenuPanel.setVisible(false);
 
         gamePanel = new JPanel(new GridBagLayout());//(new FlowLayout(FlowLayout.CENTER, 20, 20));
         gamePanel.setSize(new Dimension(800, 600));
         gamePanel.setVisible(true);
+        gamePanel.setBackground(Color.black);
         gameWindow.add(gamePanel);
 
         //Remaining cards
         remainingCardsPanel = new JPanel();
-        //remainingCardsPanel.setPreferredSize(new Dimension(300, 50));
-        //remainingCardsPanel.setBounds(25, 25, 300, 50);
-        remainingCardsPanel.setBackground(Color.blue);
+        remainingCardsPanel.setBackground(Color.black);
+        remainingCardsPanel.setForeground(Color.white);
 
         remainingCardsLabel = new JLabel();
         remainingCardsLabel.setForeground(Color.white);
@@ -119,9 +147,7 @@ public class GUI {
 
         //Run
         runPanel = new JPanel();
-        runPanel.setBackground(Color.blue);
-        //runPanel.setBounds(575, 25, 100, 50);
-        //runPanel.setPreferredSize(new Dimension(100, 50));
+        runPanel.setBackground(Color.black);
         runButton = new JButton("RUN");
         runButton.setFont(normalFont);
         runButton.addActionListener(e -> controller.runAway());
@@ -132,16 +158,11 @@ public class GUI {
         //Current hand
         currentHandPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25,25));
         currentHandPanel.setLayout(new BoxLayout(currentHandPanel, BoxLayout.X_AXIS));
-        currentHandPanel.setBackground(Color.blue);
-        //currentHandPanel.setBounds(25, 100, 700, 200);
-        //currentHandPanel.setPreferredSize(new Dimension(700, 200));
-
+        currentHandPanel.setBackground(Color.black);
 
         //Actions
         fightPanel = new JPanel();
-        fightPanel.setBackground(Color.blue);
-        //fightPanel.setBounds(25, 325, 650, 50);
-        //fightPanel.setPreferredSize(new Dimension(650,50));
+        fightPanel.setBackground(Color.black);
         fightButton = new JButton("No weapon equipped");
         fightButton.setEnabled(false);
         fightButton.setFont(normalFont);
@@ -156,9 +177,7 @@ public class GUI {
 
         //Player
         playerPanel = new JPanel();
-        playerPanel.setBackground(Color.blue);
-        //playerPanel.setBounds(25, 400, 500, 50);
-        //playerPanel.setPreferredSize(new Dimension(500,50));
+        playerPanel.setBackground(Color.black);
         playerLabel = new JLabel("Health: " + player.getHealth());
         playerLabel.setForeground(Color.white);
         playerLabel.setFont(normalFont);
@@ -166,25 +185,22 @@ public class GUI {
         playerPanel.add(playerLabel);
         playerPanel.setVisible(true);
 
-        gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        addToGamePanel(gbc, 0,0, remainingCardsPanel, 1);
-        addToGamePanel(gbc, 2,0, runPanel, 1);
+        addToParentPanel(gamePanel, gbc, 0,0, remainingCardsPanel, 1, 1);
+        addToParentPanel(gamePanel, gbc, 2,0, runPanel, 1, 1);
         refreshCurrentHand(currentHand, false);
-        addToGamePanel(gbc, 0,2, fightPanel, 3);
-        addToGamePanel(gbc, 0,3, playerPanel, 1);
+        addToParentPanel(gamePanel, gbc, 0,2, fightPanel, 3, 1);
+        addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 1, 1);
 
 //        gameWindow.revalidate();
 //        gameWindow.repaint();
 
     }
-    private void addToGamePanel(GridBagConstraints gbc, int x, int y, JPanel panel, int gridwidth) {
+    private void addToParentPanel(JPanel parentPanel, GridBagConstraints gbc, int x, int y, JComponent jcomp, int gridwidth, int gridheight) {
         gbc.gridx = x;
         gbc.gridy = y;
         gbc.gridwidth = gridwidth;
-        gamePanel.add(panel, gbc);
-
+        gbc.gridheight = gridheight;
+        parentPanel.add(jcomp, gbc);
     }
 
     public void refreshCurrentHand(List<Card> newCurrentHand, boolean isAttacking) {
@@ -207,7 +223,7 @@ public class GUI {
         currentHandPanel.revalidate();
         currentHandPanel.repaint();
 
-        addToGamePanel(gbc, 0,1, currentHandPanel, 3);
+        addToParentPanel(gamePanel, gbc, 0,1, currentHandPanel, 3, 1);
 
         //gamePanel.add(currentHandPanel);
     }
@@ -315,7 +331,6 @@ public class GUI {
 
     public void resetRun() {
         runButton.setEnabled(true);
-//        runButton.setText(str);
     }
 
     public void refreshRun() {
@@ -342,7 +357,9 @@ public class GUI {
         // Handle the user's choice
         if (option == 0) {
             System.out.println("back to main menu");
-            controller.runGame();
+            gamePanel.setVisible(false);
+            mainMenuPanel.setVisible(true);
+
             // Option 0 is "Restart", call startGame() again
         } else if (option == 1) {
             // Option 1 is "Quit", exit the program
