@@ -39,6 +39,7 @@ public class GUI {
     private JButton sheatheButton;
     private JPanel playerPanel;
     private JLabel playerLabel;
+    private JButton rulesButton;
     private ActionListener equipListener;
 
     //REMAINING CARDS
@@ -46,7 +47,7 @@ public class GUI {
 
     public GUI(Controller controller) {
         this.controller = controller;
-        gameWindow = new JFrame("GAME TITLE");
+        gameWindow = new JFrame("Deck Crawler");
         gameWindow.setLayout(new BorderLayout());
 
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,16 +71,17 @@ public class GUI {
         mainMenuPanel.setBackground(Color.black);
 
         titleNamePanel = new JPanel();
+        titleNamePanel.setLayout(new GridBagLayout());
         //titleNamePanel.setBounds(100, 100, 600, 150);
         titleNamePanel.setOpaque(true);
         titleNamePanel.setBackground(Color.black);
 
-        titleNameLabel = new JLabel("Dungeon Card Game");
+        titleNameLabel = new JLabel("DECK CRAWLER");
         titleNameLabel.setBackground(Color.black);
         titleNameLabel.setForeground(Color.white);
         titleNameLabel.setFont(titleFont);
-
-        titleNamePanel.add(titleNameLabel);
+        addToParentPanel(titleNamePanel, gbc, 0,0, titleNameLabel, 1,1 );
+        //titleNamePanel.add(titleNameLabel);
         //mainMenuPanel.add(titleNamePanel);
 
         startButtonPanel = new JPanel();
@@ -156,12 +158,36 @@ public class GUI {
         });
         hardButton.addActionListener(e -> controller.newGame(2));
 
+        rulesButton = new JButton("Rules");
+        rulesButton.setFont(normalFont);
+        rulesButton.setFocusPainted(false);
+        rulesButton.setBorderPainted(true);
+        rulesButton.setPreferredSize(new Dimension(75, 35));
+        rulesButton.setBorder(new LineBorder(Color.white, 3));
+        rulesButton.setBackground(Color.black);
+        rulesButton.setForeground(Color.white);
+        rulesButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                rulesButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                rulesButton.setBackground(Color.black);
+            }
+        });
+        rulesButton.addActionListener(e -> controller.showRules());
+
         addToParentPanel(startButtonPanel, gbc, 0, 0, easyButton, 1, 1);
         addToParentPanel(startButtonPanel, gbc, 0, 1, mediumButton, 1, 1);
         addToParentPanel(startButtonPanel, gbc, 0, 2, hardButton, 1, 1);
 
-        addToParentPanel(mainMenuPanel, gbc, 0, 0, titleNamePanel, 3, 1);
-        addToParentPanel(mainMenuPanel, gbc, 1, 1, startButtonPanel, 3, 1);
+        addToParentPanel(mainMenuPanel, gbc, 1, 0, titleNamePanel, 3, 1);
+        addToParentPanel(mainMenuPanel, gbc, 1, 1, rulesButton, 3, 1);
+        addToParentPanel(mainMenuPanel, gbc, 1, 2, startButtonPanel, 3, 1);
 
         gameWindow.add(mainMenuPanel);
         gameWindow.revalidate();
@@ -289,7 +315,8 @@ public class GUI {
         addToParentPanel(gamePanel, gbc, 2,0, runPanel, 1, 1);
         refreshCurrentHand(currentHand, false);
         addToParentPanel(gamePanel, gbc, 0,2, fightPanel, 3, 1);
-        addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 3, 1);
+        addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 1, 1);
+        addToParentPanel(gamePanel, gbc, 2,3, rulesButton, 1, 1);
 
 //        gameWindow.revalidate();
 //        gameWindow.repaint();
@@ -457,6 +484,15 @@ public class GUI {
 
     public void refreshPlayer() {
        playerLabel.setText("Health: " + player.getHealth());
+    }
+
+    public void showRules() {
+        String message = "<html><body style='width: 400px'>The rooms of the dungeon are created by laying out cards in groups of four. Progress is made through the dungeon by resolving three of the four dungeon cards in each room. The fourth card remains for the next room. Rooms can be ran from if needed, but never twice in a row and not if a card in the current room has been used. The player will eventually need to come back to deferred rooms.<br" +
+                "<br>" +
+                "Weapons may be equipped to attack multiple monsters, as long as each defeated monster is of lower value than the last monster defeated with that same weapon. To attack a monster of higher value, a new weapon must be equipped. Monsters can also always be attacked barehanded, but this depletes the player's health for the full value of the monster. Health potions may be used to recover life points up to the maximum starting value of 20.<br" +
+                "<br>" +
+                "The game ends in a loss when life points reach zero or in a victory if the player manages to clear all rooms of the dungeon.</body></html>";
+        JOptionPane.showMessageDialog(null, new JLabel(message), "Rules", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void gameOver(String text){

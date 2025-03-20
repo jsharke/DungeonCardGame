@@ -36,6 +36,10 @@ public class Controller {
         System.out.println("Game set up");
     }
 
+    public void showRules() {
+        gui.showRules();
+    }
+
     public void runAway() {
         if (player.isSkipAvail() && currentHand.size() == 4) {
             System.out.println("Run selected");
