@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Card {
+    private Controller controller;
     public String type;
     public int value;
+
 
     public JPanel cardPanel;
     public JButton cardButton;
@@ -12,7 +14,10 @@ public class Card {
     Card(String type, int value, Controller controller) {
         this.type = type;
         this.value = value;
+        this.controller = controller;
+    }
 
+    public void createCardPanel() {
         cardPanel = new JPanel();
         cardPanel.setSize(100, 140);
         cardPanel.setLayout(new FlowLayout());
@@ -37,6 +42,23 @@ public class Card {
         cardButton.setFont(valueFont);
         cardButton.setPreferredSize(new Dimension(100, 140));
         cardButton.setFocusPainted(false);
+
+//        if (type.equals("Potion")) {
+//            cardButton.setBackground(Color.GREEN);
+//            cardButton.setForeground(Color.black);
+//        }
+//        if (type.equals("Weapon")) {
+//            cardButton.setBackground(Color.YELLOW);
+//            cardButton.setForeground(Color.black);
+//        }
+//        if (type.equals("Monster")) {
+//            cardButton.setBackground(Color.red);
+//            cardButton.setForeground(Color.black);
+//        }
+        cardButton.setBackground(Color.white);
+        cardButton.setForeground(Color.black);
+
+
         cardButton.setHorizontalTextPosition(SwingConstants.CENTER);
         cardButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         cardButton.setIconTextGap(30);

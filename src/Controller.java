@@ -38,8 +38,8 @@ public class Controller {
 
     public void runAway() {
         if (player.isSkipAvail() && currentHand.size() == 4) {
+            System.out.println("Run selected");
             deck.newHand(currentHand);
-            System.out.println("New hand is dealt");
             player.runUnavavailable();
             gui.refreshRun();
             gui.updateRemainingDeck(deck.getCards().size());
@@ -51,6 +51,7 @@ public class Controller {
         isAttacking = true;
         gui.usingWeapon();
         gui.refreshCurrentHand(currentHand, isAttacking);
+        System.out.println("Weapon " + player.getWeapon() + " attacking");
 
     } //different from using weapon, see useCard for that implementation
 
@@ -58,31 +59,34 @@ public class Controller {
         isAttacking = false;
         gui.sheatheWeapon();
         gui.refreshCurrentHand(currentHand, isAttacking);
+        System.out.println("Weapon sheathed");
     }
 
     public void useCard(Card card) {
         if (card.type.equals("Potion")) {
+            System.out.println("Player (health " + player.getHealth() + ") healing for " + card.value);
             player.heal(card.value);
-            System.out.println(player.getHealth() + " healed for " + card.value);
+            System.out.println("Player health now " + player.getHealth());
         }
         if (card.type.equals("Weapon")) {
             player.equip(card.value);
             player.setLastKill(101);
             gui.updateWeapon();
             gui.enableFight();
-            System.out.println("equipped " + card.value);
+            System.out.println("Equipped weapon " + card.value);
         }
         if (card.type.equals("Monster")) {
             if (isAttacking) {
-                System.out.println("Attacking " + card.value + " with " + player.getWeapon() + " weapon and " + player.getHealth() + " health");
+                System.out.println("Attacking monster" + card.value + " with " + player.getWeapon() + " weapon and " + player.getHealth() + " health");
                 player.fight(card.value);
                 player.setLastKill(card.value);
-                System.out.println("just killed " + player.getLastKill() + ", health now " + player.getHealth());
+                System.out.println("Just killed monster" + player.getLastKill() + " - health now " + player.getHealth());
                 gui.updateWeapon();
                 sheatheWeapon();
             } else {
+                System.out.println("Player (health " + player.getHealth() + ") taking damage " + card.value);
                 player.takeDamage(card.value);
-                System.out.println(player.getHealth() + " took damage " + card.value);
+                System.out.println("Player health now " + player.getHealth());
             }
         }
 
@@ -95,7 +99,6 @@ public class Controller {
             player.skipReset();
             gui.updateRemainingDeck(deck.getCards().size());
         }
-//        System.out.println(currentHand.size());
 
         if (player.isDead()) {
             gui.gameOver("YOU DIED");
@@ -107,6 +110,14 @@ public class Controller {
         gui.refreshRun();
         gui.refreshCurrentHand(currentHand, false);
         gui.refreshPlayer();
+    }
+
+    public void makeCardPanels() {
+        for (Card card : currentHand){
+            card.createCardPanel();
+            System.out.println("Panel made for " + card.type + " " + card.value);
+        }
+
     }
 
     public void showSortedRemainingCards() {

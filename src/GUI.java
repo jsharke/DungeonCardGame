@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class GUI {
@@ -13,10 +16,10 @@ public class GUI {
     private JPanel mainMenuPanel;
     private JPanel titleNamePanel;
     private JLabel titleNameLabel;
-    private Font titleFont = new Font("Times New Roman", Font.PLAIN, 56);
+    private Font titleFont = new Font("Dialog", Font.PLAIN, 56);
     private JPanel startButtonPanel;
     private JButton startButton;
-    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 20);
+    private Font normalFont = new Font("Dialog", Font.PLAIN, 20);
 
     //NEW GAME
     private Deck deck;
@@ -81,25 +84,76 @@ public class GUI {
 
         startButtonPanel = new JPanel();
         startButtonPanel.setLayout(new GridBagLayout());
-        startButtonPanel.setBounds(300, 400, 200, 100);
+        //startButtonPanel.setBounds(300, 400, 200, 100);
         startButtonPanel.setBackground(Color.black);
 
         JButton easyButton = new JButton("Easy");
         easyButton.setFont(normalFont);
         easyButton.setFocusPainted(false);
         easyButton.setBorderPainted(true);
+        easyButton.setPreferredSize(new Dimension(100, 50));
+        easyButton.setBorder(new LineBorder(Color.white, 3));
+        easyButton.setBackground(Color.black);
+        easyButton.setForeground(Color.white);
+        easyButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                easyButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                easyButton.setBackground(Color.black);
+            }
+        });
         easyButton.addActionListener(e -> controller.newGame(0));
 
         JButton mediumButton = new JButton("Medium");
         mediumButton.setFont(normalFont);
         mediumButton.setFocusPainted(false);
         mediumButton.setBorderPainted(true);
+        mediumButton.setPreferredSize(new Dimension(100, 50));
+        mediumButton.setBorder(new LineBorder(Color.white, 3));
+        mediumButton.setBackground(Color.black);
+        mediumButton.setForeground(Color.white);
+        mediumButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                mediumButton.setBackground(Color.gray);
+            }
+//
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                mediumButton.setBackground(Color.black);
+            }
+        });
         mediumButton.addActionListener(e -> controller.newGame(1));
 
         JButton hardButton = new JButton("Difficult");
         hardButton.setFont(normalFont);
         hardButton.setFocusPainted(false);
         hardButton.setBorderPainted(true);
+        hardButton.setPreferredSize(new Dimension(100, 50));
+        hardButton.setBorder(new LineBorder(Color.white, 3));
+        hardButton.setBackground(Color.black);
+        hardButton.setForeground(Color.white);
+        hardButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                hardButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                hardButton.setBackground(Color.black);
+            }
+        });
         hardButton.addActionListener(e -> controller.newGame(2));
 
         addToParentPanel(startButtonPanel, gbc, 0, 0, easyButton, 1, 1);
@@ -110,7 +164,8 @@ public class GUI {
         addToParentPanel(mainMenuPanel, gbc, 1, 1, startButtonPanel, 3, 1);
 
         gameWindow.add(mainMenuPanel);
-
+        gameWindow.revalidate();
+        gameWindow.repaint();
     }
 
     public void newGame(Deck deck, List<Card> currentHand, Player player) {
@@ -120,7 +175,8 @@ public class GUI {
 
         mainMenuPanel.setVisible(false);
 
-        gamePanel = new JPanel(new GridBagLayout());//(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        gamePanel = new JPanel();//(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        gamePanel.setLayout(new GridBagLayout());
         gamePanel.setSize(new Dimension(800, 600));
         gamePanel.setVisible(true);
         gamePanel.setBackground(Color.black);
@@ -150,6 +206,24 @@ public class GUI {
         runPanel.setBackground(Color.black);
         runButton = new JButton("RUN");
         runButton.setFont(normalFont);
+        runButton.setFocusPainted(false);
+        runButton.setPreferredSize(new Dimension(75, 35));
+        runButton.setBorder(new LineBorder(Color.white, 3));
+        runButton.setBackground(Color.black);
+        runButton.setForeground(Color.white);
+        runButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                runButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                runButton.setBackground(Color.black);
+            }
+        });
         runButton.addActionListener(e -> controller.runAway());
 
         runPanel.add(runButton);
@@ -165,10 +239,36 @@ public class GUI {
         fightPanel.setBackground(Color.black);
         fightButton = new JButton("No weapon equipped");
         fightButton.setEnabled(false);
+        fightButton.setFocusPainted(false);
         fightButton.setFont(normalFont);
+        fightButton.setPreferredSize(new Dimension(450, 35));
+        fightButton.setBorder(new LineBorder(Color.white, 3));
+        fightButton.setBackground(Color.black);
+        fightButton.setForeground(Color.white);
+
         fightButton.addActionListener(e -> controller.equipWeapon());
+
+
         sheatheButton = new JButton();
         sheatheButton.setFont(normalFont);
+        sheatheButton.setFocusPainted(false);
+        sheatheButton.setPreferredSize(new Dimension(450, 35));
+        sheatheButton.setBorder(new LineBorder(Color.white, 3));
+        sheatheButton.setBackground(Color.black);
+        sheatheButton.setForeground(Color.white);
+        sheatheButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                sheatheButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                sheatheButton.setBackground(Color.black);
+            }
+        });
         sheatheButton.addActionListener(e -> controller.sheatheWeapon());
 
         fightPanel.add(fightButton);
@@ -189,7 +289,7 @@ public class GUI {
         addToParentPanel(gamePanel, gbc, 2,0, runPanel, 1, 1);
         refreshCurrentHand(currentHand, false);
         addToParentPanel(gamePanel, gbc, 0,2, fightPanel, 3, 1);
-        addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 1, 1);
+        addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 3, 1);
 
 //        gameWindow.revalidate();
 //        gameWindow.repaint();
@@ -246,6 +346,19 @@ public class GUI {
 
     public void enableFight(){
         fightButton.setEnabled(true);
+        fightButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                fightButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                fightButton.setBackground(Color.black);
+            }
+        });
     }
 
     public void usingWeapon(){

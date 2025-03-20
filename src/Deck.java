@@ -61,6 +61,8 @@ public class Deck {
         while (currentHand.size() < 4 && !getCards().isEmpty()) {
             currentHand.add(drawCard());
         }
+        controller.makeCardPanels();
+        System.out.println("Hand filled");
     }
 
     public void newHand(List<Card> currentHand) {
@@ -70,6 +72,8 @@ public class Deck {
         while (currentHand.size() < 4 && !cards.isEmpty()) {
             currentHand.add(this.drawCard());
         }
+        System.out.println("New hand is dealt");
+        controller.makeCardPanels();
     }
 
     public List<Card> sortedRemainingCards() {
