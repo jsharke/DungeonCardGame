@@ -18,8 +18,8 @@ public class Deck {
 
         addCards(cards, "Potion", 2, 10);
         addCards(cards, "Weapon", 2, 10);
-        addCards(cards, "Monster", 2, 10);
-        addCards(cards, "Monster", 2, 10);
+        addCards(cards, "Monster", 2, 14);
+        addCards(cards, "Monster", 2, 14);
         Collections.shuffle(cards);
     }
 

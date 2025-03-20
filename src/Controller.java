@@ -62,22 +62,26 @@ public class Controller {
     public void useCard(Card card) {
         if (card.type.equals("Potion")) {
             player.heal(card.value);
+            System.out.println(player.getHealth() + " healed for " + card.value);
         }
         if (card.type.equals("Weapon")) {
             player.equip(card.value);
             player.setLastKill(101);
             gui.updateWeapon();
             gui.enableFight();
+            System.out.println("equipped " + card.value);
         }
         if (card.type.equals("Monster")) {
             if (isAttacking) {
+                System.out.println("Attacking " + card.value + " with " + player.getWeapon() + " weapon and " + player.getHealth() + " health");
                 player.fight(card.value);
                 player.setLastKill(card.value);
-                System.out.println("just killed " + player.getLastKill());
+                System.out.println("just killed " + player.getLastKill() + ", health now " + player.getHealth());
                 gui.updateWeapon();
                 sheatheWeapon();
             } else {
                 player.takeDamage(card.value);
+                System.out.println(player.getHealth() + " took damage " + card.value);
             }
         }
 

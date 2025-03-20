@@ -21,6 +21,8 @@ public class GUI {
     private Player player;
     private List<Card> currentHand;
 
+    private JPanel gamePanel;
+    private GridBagConstraints gbc;
     private JPanel remainingCardsPanel;
     private JLabel remainingCardsLabel;
     private JButton remainingCardsButton;
@@ -36,12 +38,12 @@ public class GUI {
 
     //REMAINING CARDS
     private JDialog remainingCardsWindow;
-    private GridBagConstraints gbc;
 
     public GUI(Controller controller) {
         this.controller = controller;
         mainMenu();
     }
+
     public void mainMenu(){
         gameWindow = new JFrame("GAME TITLE");
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,9 +92,15 @@ public class GUI {
         titleNamePanel.setVisible(false);
         startButtonPanel.setVisible(false);
 
+        gamePanel = new JPanel(new GridBagLayout());//(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        gamePanel.setSize(new Dimension(800, 600));
+        gamePanel.setVisible(true);
+        gameWindow.add(gamePanel);
+
         //Remaining cards
         remainingCardsPanel = new JPanel();
-        remainingCardsPanel.setBounds(25, 25, 300, 50);
+        //remainingCardsPanel.setPreferredSize(new Dimension(300, 50));
+        //remainingCardsPanel.setBounds(25, 25, 300, 50);
         remainingCardsPanel.setBackground(Color.blue);
 
         remainingCardsLabel = new JLabel();
@@ -105,34 +113,35 @@ public class GUI {
         //remainingCardsButton.addActionListener(e -> controller.showSortedRemainingCards());
 
         remainingCardsPanel.add(remainingCardsLabel);
-        remainingCardsPanel.add(remainingCardsButton);
+        //remainingCardsPanel.add(remainingCardsButton);
         remainingCardsPanel.setVisible(true);
-        gameWindow.add(remainingCardsPanel);
-        //con.add(mainTextPanel);
+
 
         //Run
         runPanel = new JPanel();
         runPanel.setBackground(Color.blue);
-        runPanel.setBounds(575, 25, 100, 50);
+        //runPanel.setBounds(575, 25, 100, 50);
+        //runPanel.setPreferredSize(new Dimension(100, 50));
         runButton = new JButton("RUN");
         runButton.setFont(normalFont);
         runButton.addActionListener(e -> controller.runAway());
 
         runPanel.add(runButton);
         runPanel.setVisible(true);
-        gameWindow.add(runPanel);
 
         //Current hand
-        currentHandPanel = new JPanel();
+        currentHandPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25,25));
         currentHandPanel.setLayout(new BoxLayout(currentHandPanel, BoxLayout.X_AXIS));
         currentHandPanel.setBackground(Color.blue);
-        currentHandPanel.setBounds(25, 100, 700, 200);
-        refreshCurrentHand(currentHand, false);
+        //currentHandPanel.setBounds(25, 100, 700, 200);
+        //currentHandPanel.setPreferredSize(new Dimension(700, 200));
+
 
         //Actions
         fightPanel = new JPanel();
         fightPanel.setBackground(Color.blue);
-        fightPanel.setBounds(25, 325, 650, 50);
+        //fightPanel.setBounds(25, 325, 650, 50);
+        //fightPanel.setPreferredSize(new Dimension(650,50));
         fightButton = new JButton("No weapon equipped");
         fightButton.setEnabled(false);
         fightButton.setFont(normalFont);
@@ -143,27 +152,44 @@ public class GUI {
 
         fightPanel.add(fightButton);
         fightPanel.setVisible(true);
-        gameWindow.add(fightPanel);
+
 
         //Player
         playerPanel = new JPanel();
         playerPanel.setBackground(Color.blue);
-        playerPanel.setBounds(25, 400, 500, 50);
+        //playerPanel.setBounds(25, 400, 500, 50);
+        //playerPanel.setPreferredSize(new Dimension(500,50));
         playerLabel = new JLabel("Health: " + player.getHealth());
         playerLabel.setForeground(Color.white);
         playerLabel.setFont(normalFont);
 
         playerPanel.add(playerLabel);
         playerPanel.setVisible(true);
-        gameWindow.add(playerPanel);
 
-        gameWindow.revalidate();
-        gameWindow.repaint();
+        gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        addToGamePanel(gbc, 0,0, remainingCardsPanel, 1);
+        addToGamePanel(gbc, 2,0, runPanel, 1);
+        refreshCurrentHand(currentHand, false);
+        addToGamePanel(gbc, 0,2, fightPanel, 3);
+        addToGamePanel(gbc, 0,3, playerPanel, 1);
+
+//        gameWindow.revalidate();
+//        gameWindow.repaint();
+
+    }
+    private void addToGamePanel(GridBagConstraints gbc, int x, int y, JPanel panel, int gridwidth) {
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.gridwidth = gridwidth;
+        gamePanel.add(panel, gbc);
 
     }
 
     public void refreshCurrentHand(List<Card> newCurrentHand, boolean isAttacking) {
         currentHandPanel.removeAll();
+        currentHandPanel.add(Box.createHorizontalGlue());
         for (Card card : newCurrentHand) {
             if (isAttacking) {
                 if (card.type.equals("Potion") || card.type.equals("Weapon")) {
@@ -176,12 +202,14 @@ public class GUI {
                 card.cardButton.setEnabled(true);
             }
             currentHandPanel.add(card.cardButton);
-            currentHandPanel.add(Box.createHorizontalGlue());
         }
         currentHandPanel.setVisible(true);
         currentHandPanel.revalidate();
         currentHandPanel.repaint();
-        gameWindow.add(currentHandPanel);
+
+        addToGamePanel(gbc, 0,1, currentHandPanel, 3);
+
+        //gamePanel.add(currentHandPanel);
     }
 
     public void updateWeapon() {
@@ -226,14 +254,14 @@ public class GUI {
         updateWeapon();
     }
 
+    public void updateRemainingDeck(int size) {
+        remainingCardsLabel.setText("Remaining cards: " + String.valueOf(size));
+    }
+
     private void addToUI(JPanel panel, JComponent jcomp, int x, int y) {
         gbc.gridx = x;
         gbc.gridy = y;
         panel.add(jcomp, gbc);
-    }
-
-    public void updateRemainingDeck(int size) {
-        remainingCardsLabel.setText("Remaining cards: " + String.valueOf(size));
     }
 
     public void showRemainingDeck(List<Card> remainingDeck) {
