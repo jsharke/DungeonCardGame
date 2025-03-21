@@ -18,7 +18,6 @@ public class GUI {
     private JLabel titleNameLabel;
     private Font titleFont = new Font("Dialog", Font.PLAIN, 56);
     private JPanel startButtonPanel;
-    private JButton startButton;
     private Font normalFont = new Font("Dialog", Font.PLAIN, 20);
 
     //NEW GAME
@@ -158,35 +157,35 @@ public class GUI {
         });
         hardButton.addActionListener(e -> controller.newGame(2));
 
-        rulesButton = new JButton("Rules");
-        rulesButton.setFont(normalFont);
-        rulesButton.setFocusPainted(false);
-        rulesButton.setBorderPainted(true);
-        rulesButton.setPreferredSize(new Dimension(75, 35));
-        rulesButton.setBorder(new LineBorder(Color.white, 3));
-        rulesButton.setBackground(Color.black);
-        rulesButton.setForeground(Color.white);
-        rulesButton.addMouseListener(new MouseAdapter() {
+        JButton mainRulesButton = new JButton("Rules");
+        mainRulesButton.setFont(normalFont);
+        mainRulesButton.setFocusPainted(false);
+        mainRulesButton.setBorderPainted(true);
+        mainRulesButton.setPreferredSize(new Dimension(75, 35));
+        mainRulesButton.setBorder(new LineBorder(Color.white, 3));
+        mainRulesButton.setBackground(Color.white);
+        mainRulesButton.setForeground(Color.black);
+        mainRulesButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 // Change color when mouse enters
-                rulesButton.setBackground(Color.gray);
+                mainRulesButton.setBackground(Color.gray);
             }
             //
             @Override
             public void mouseExited(MouseEvent e) {
                 // Change color back when mouse exits
-                rulesButton.setBackground(Color.black);
+                mainRulesButton.setBackground(Color.white);
             }
         });
-        rulesButton.addActionListener(e -> controller.showRules());
+        mainRulesButton.addActionListener(e -> controller.showRules());
 
         addToParentPanel(startButtonPanel, gbc, 0, 0, easyButton, 1, 1);
         addToParentPanel(startButtonPanel, gbc, 0, 1, mediumButton, 1, 1);
         addToParentPanel(startButtonPanel, gbc, 0, 2, hardButton, 1, 1);
 
         addToParentPanel(mainMenuPanel, gbc, 1, 0, titleNamePanel, 3, 1);
-        addToParentPanel(mainMenuPanel, gbc, 1, 1, rulesButton, 3, 1);
+        addToParentPanel(mainMenuPanel, gbc, 1, 1, mainRulesButton, 3, 1);
         addToParentPanel(mainMenuPanel, gbc, 1, 2, startButtonPanel, 3, 1);
 
         gameWindow.add(mainMenuPanel);
@@ -300,7 +299,6 @@ public class GUI {
         fightPanel.add(fightButton);
         fightPanel.setVisible(true);
 
-
         //Player
         playerPanel = new JPanel();
         playerPanel.setBackground(Color.black);
@@ -311,12 +309,35 @@ public class GUI {
         playerPanel.add(playerLabel);
         playerPanel.setVisible(true);
 
+        JButton gameRulesButton = new JButton("Rules");
+        gameRulesButton.setFont(normalFont);
+        gameRulesButton.setFocusPainted(false);
+        gameRulesButton.setBorderPainted(true);
+        gameRulesButton.setPreferredSize(new Dimension(75, 35));
+        gameRulesButton.setBorder(new LineBorder(Color.white, 3));
+        gameRulesButton.setBackground(Color.white);
+        gameRulesButton.setForeground(Color.black);
+        gameRulesButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Change color when mouse enters
+                gameRulesButton.setBackground(Color.gray);
+            }
+            //
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Change color back when mouse exits
+                gameRulesButton.setBackground(Color.white);
+            }
+        });
+        gameRulesButton.addActionListener(e -> controller.showRules());
+
         addToParentPanel(gamePanel, gbc, 0,0, remainingCardsPanel, 1, 1);
         addToParentPanel(gamePanel, gbc, 2,0, runPanel, 1, 1);
         refreshCurrentHand(currentHand, false);
         addToParentPanel(gamePanel, gbc, 0,2, fightPanel, 3, 1);
         addToParentPanel(gamePanel, gbc, 0,3, playerPanel, 1, 1);
-        addToParentPanel(gamePanel, gbc, 2,3, rulesButton, 1, 1);
+        addToParentPanel(gamePanel, gbc, 2,3, gameRulesButton, 1, 1);
 
 //        gameWindow.revalidate();
 //        gameWindow.repaint();
